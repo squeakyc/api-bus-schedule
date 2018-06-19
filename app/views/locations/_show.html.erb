@@ -1,0 +1,72 @@
+<script >
+
+
+
+
+  
+</script>
+
+  <% @nearby_buses.each_with_index do |bus, index| %>
+    <p>
+      <strong>Route:</strong>
+      <%= bus["ROUTE"] %><br/>
+      <strong>Vehicle:</strong>
+      <%= bus["VEHICLE"] %><br/>
+      <strong>Next Stop:</strong>
+      <%= bus["TIMEPOINT"] %>
+    </p>
+
+    <script>
+
+      $(document).ready(function () {
+        function initialize() {
+          var userCoords = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>);
+          var busCoords = new google.maps.LatLng(<%= bus["LATITUDE"] %>, <%= bus["LONGITUDE"] %>);
+
+          var mapOptions = {
+            center: userCoords,
+            zoom: 13,
+            scrollwheel: false
+          };
+
+
+          var map = new google.maps.Map(document.getElementById('map-canvas<%= index %>'), mapOptions);
+
+          // This is the text for our bus
+          var contentStringBus = "A bus is here!";
+
+          // This is the text for our user
+          var contentStringUser = "You are here!";
+
+          // This is the marker that shows where the bus is
+          var busMarker = new google.maps.Marker({position: busCoords, map: map, animation: google.maps.Animation.DROP});
+
+          // This is the marker for our users position
+          var userMarker = new google.maps.Marker({position: userCoords, map: map, animation: google.maps.Animation.BOUNCE});
+
+          // Info window and event listener for the bus
+          var infoWindowBus = new google.maps.InfoWindow({content: contentStringBus});
+
+          google.maps.event.addListener(busMarker, 'click', function () {
+            infoWindowBus.open(map, busMarker);
+          });
+
+          // Info window and event listener for the user
+          var infoWindowUser = new google.maps.InfoWindow({content: contentStringUser});
+
+          google.maps.event.addListener(userMarker, 'click', function () {
+            infoWindowUser.open(map, userMarker);
+          });
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+      });
+    </script>
+    <div class="bus-map" id="map-canvas<%= index %>"></div>
+
+    <!-- End maps -->
+  <% end %>
+<% end %>
+
+<%= link_to "Actually, I'm at...", root_path %>

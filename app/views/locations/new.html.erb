@@ -1,0 +1,12 @@
+<h1>Bus Tracker</h1>
+<h2>Is a Bus Nearby?</h2>
+
+<p>
+  Give us your address or approximate location
+  (<em>I'm at the corner of...</em>), and we'll
+  let you know if there's a bus in vicinity!
+</p>
+
+<%= render 'form', location: @location %>
+
+<%= link_to 'Back', locations_path %>
